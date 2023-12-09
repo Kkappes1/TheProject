@@ -1,1 +1,55 @@
-# TheProject
+def draw_board(board):
+  for row in board:
+    print(" | ".join(row))
+    print("-" * 5)
+
+def check_win(board, player):
+    # Check rows, columns, and diagonals for a win
+  for i in range(3):
+    if all([cell == player for cell in board[i]]) or \
+      all([board[j][i] == player for j in range(3)]):
+      return True
+  return board[0][0] == player and board[1][1] == player and board[2][2] == player or \
+      board[0][2] == player and board[1][1] == player and board[2][0] == player
+
+def is_board_full(board):
+  return all(all(cell != " " for cell in row) for row in board)
+
+def make_move(board, position, player):
+  if board[position[0]][position[1]] == " ":
+    board[position[0]][position[1]] = player
+    return True
+  return False
+
+def get_move():
+  while True:
+    try:
+      x, y = map(int, input("Enter your move (row col): ").split())
+      if x in range(3) and y in range(3):
+        return x, y
+    except ValueError:
+      print("Invalid input. Please enter row and column numbers.")
+
+def play_tic_tac_toe():
+  board = [[" " for _ in range(3)] for _ in range(3)]
+  current_player = "X"
+
+  while True:
+    draw_board(board)
+    print(f"Player {current_player}'s turn.")
+
+    x, y = get_move()
+    if make_move(board, (x, y), current_player):
+      if check_win(board, current_player):
+        draw_board(board)
+        print(f"Player {current_player} wins!")
+        break
+      elif is_board_full(board):
+        draw_board(board)
+        print("It's a tie!")
+        break
+      current_player = "O" if current_player == "X" else "X"
+    else:
+      print("This position is already occupied.")
+
+play_tic_tac_toe()
